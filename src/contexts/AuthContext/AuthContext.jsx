@@ -10,9 +10,7 @@ export function useAuth() {
 }
 
 export default function AuthProvider({ children }) {
-    
     const [currentUser, setCurrentUser] = useState(null);
-    
     const [loading, setLoading] = useState(true);
     
     const [ config, setConfig ] = useState({
@@ -26,9 +24,11 @@ export default function AuthProvider({ children }) {
 
     useEffect(() => {
         
+        let mounted = false;
+
         if(!auth) return;
 
-        return async () => {
+        const authConfig = async () => {
             const { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updatePassword, onAuthStateChanged } = await import("firebase/auth")
 
             setConfig({
@@ -38,12 +38,18 @@ export default function AuthProvider({ children }) {
                 updatePwd: (password) => currentUser ? updatePassword(currentUser, password) : false,
             })
             
+            mounted = true;
 
             return onAuthStateChanged(auth, user => {
-                setCurrentUser(user)
                 setLoading(false)
+                setCurrentUser(user)
             })
         }
+
+        if(!mounted) {
+            authConfig();
+        }
+
     }, []);
     
 

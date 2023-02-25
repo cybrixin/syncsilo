@@ -1,6 +1,5 @@
 import '~bootstrap/dist/css/bootstrap.min.css';
 import './index.css'
-
 import React from 'react'
 import { Suspense, lazy } from 'react'
 import Spinner from '@/components/Spinner';
