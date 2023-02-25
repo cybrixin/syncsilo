@@ -8,3 +8,19 @@ html {
 body {
     all: unset;
 }
+
+.brand, .intro {
+    font-weight: 900;
+    vertical-align: middle;
+    font-size: 1.5rem;
+    font-family: 'Montserrat';
+}
+
+.intro {
+    font-weight: 500;
+}
+
+.emoji {
+    font-family: 'Segoe UI Emoji';
+    font-size: 1.2rem;
+}

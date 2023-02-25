@@ -1,5 +1,7 @@
 import '~bootstrap/dist/css/bootstrap.min.css';
-import './index.css'
+import '@/assets/styles/index.css'
+import '@/assets/styles/scroll.css'
+
 import React from 'react'
 import { Suspense, lazy } from 'react'
 import Spinner from '@/components/Spinner';

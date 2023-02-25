@@ -10,6 +10,7 @@ import TestComponent from '@/components/TestComponent';
 
 import NotFound from "@/pages/NotFound";
 import Home from "@/pages/Home";
+import Login from "@/pages/Login";
 
 export default function App() {
   return (
@@ -18,8 +19,8 @@ export default function App() {
           <AuthContext>
             <Routes>
                 <Route path="/signup" element={<Spinner />}></Route>
-                <Route path="/login" element={<Spinner />}></Route>
-                <Route path="/login" element={<Spinner />}></Route>
+                <Route path="/login" element={<Login />}></Route>
+                {/* <Route path="/login" element={<Spinner />}></Route> */}
 
                 <Route exact path="/" element={<Home />}></Route>
 

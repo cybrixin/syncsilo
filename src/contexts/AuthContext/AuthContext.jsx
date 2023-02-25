@@ -41,6 +41,7 @@ export default function AuthProvider({ children }) {
             mounted = true;
 
             return onAuthStateChanged(auth, user => {
+                // TODO: Trigger => user !== undefined => Share info in context.
                 setLoading(false)
                 setCurrentUser(user)
             })
