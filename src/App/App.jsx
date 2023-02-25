@@ -28,5 +28,5 @@ export default function App() {
           </AuthContext>
         </Router>
     </AppContext>
-  )
+  );
 }
