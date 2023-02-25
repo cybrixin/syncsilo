@@ -38,7 +38,7 @@ export default function Login() {
         const password = passwordRef.current.value;
         try {
             if(email === "" || password === "") {
-                setError("All fields are required");
+                setError("All fields are required.");
             }else {
                 // await userAuth(emailRef.current.value, passwordRef.current.value)
             }
@@ -74,7 +74,7 @@ export default function Login() {
 			<CenteredContainer maxWidth={"500px"}>
 				<Card>
 					<Card.Body>
-						<h4 className={`m-0 mb-2 ${styles.intro}`}>Hi! {greet()}{' '}<span className='emoji'>{greetEmoji()}</span>.</h4>
+						<h4 className={`m-0 mb-2 ${styles.intro}`}>Hi! {greet()}{' '}<span className='emoji'>{greetEmoji()}</span></h4>
 						{/* <p className={`m-0 mb-2 ${styles.intro}`}>Please sign in to continue.</p> */}
 						<hr/>
 						<p className={`m-0 mb-4 ${styles.intro} ${styles.danger}`}>All * fields are requied.</p>
@@ -87,6 +87,7 @@ export default function Login() {
 								<Form.Label className={styles.label}>Password*</Form.Label>
 								<Form.Control type="password" ref={passwordRef} disabled={loading} />
 							</Form.Group>
+							{error && (<><hr/> <p className={`m-0 mt-2 mb-2 ${styles.intro} ${styles.danger}`} style={{fontWeight: 500}}>Aw snap! There was an error! {error}</p></>)}
 							<hr/>
 							<div className="w-100 mt-3">
 								<Link to="/forgot-password">Forgot Password?</Link>
