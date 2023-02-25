@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "baseUrl": "./src",
+        "paths": {
+            "@/components/*": ["components/*"],
+            "@/pages/*": ["pages/*"],
+            "@/contexts/*": ["contexts/*"],
+            "@/hooks/*": ["hooks/*"],
+            "@/util/*": ["util/*"],
+            "@/icons/*": ["icons/*"],
+            "@/assets/styles/*": ["assests/styles/*"],
+            "@/assets/images/*": ["assests/images/*"],
+            "@/routes/*": ["routes/*"],
+        }
+    },
+    "exclude": ["node-modules"]
+}

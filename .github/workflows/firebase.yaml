@@ -1,0 +1,96 @@
+name: "Firebase hosting CI/CD"
+on:
+  push:
+    paths:
+      - "src/**"
+      - "firebase.json"
+      - "public/**"
+      - "index.html"
+      - "package.json"
+    branches:
+      - "dev"
+  
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+  
+  workflow_dispatch:
+    
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout to the branch"
+        uses: actions/checkout@v3
+      - name: "Node.js setup"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: "Install Dependencies (Clean)"
+        run: npm ci
+      - name: "Build the project"
+        run: npm run build
+      - name: "Upload the build artifact"
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build
+  
+  beta_preview:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    if: ${{ github.event_name == 'push' && github.repository_owner == github.triggering_actor && github.ref_name == 'dev' }}
+    steps:
+      - name: "Checkout to the branch"
+        uses: actions/checkout@v3
+      - name: "Download the build artifact"
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: build
+      - name: Deploy to firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FIRE_APPS }}'
+          channelID: beta
+          expires: 1d
+          target: fire-cloud
+          projectID: fire-apps-7827c
+      - name: "Delete the artifact"
+        if: ${{ always() }}
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: build
+          failOnError: 'false'
+
+  # Manually triggered or Auto triggered
+  live_preview:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    if: ${{  github.ref_name == 'main' && ( github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request' ) }}
+    steps:
+      - name: "Checkout to the branch"
+        uses: actions/checkout@v3
+      - name: "Download the build artifact"
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: build
+      - name: Deploy to firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FIRE_APPS }}'
+          channelID: live
+          target: fire-cloud
+          projectID: fire-apps-7827c
+      - name: "Delete the artifact"
+        if: ${{ always() }}
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: build
+          failOnError: 'false'
