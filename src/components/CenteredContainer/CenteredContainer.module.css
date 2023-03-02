@@ -1,0 +1,7 @@
+.container-div {
+    max-width: var(--max-width, 400px);
+}
+
+.container {
+    min-height: 100vh;
+}

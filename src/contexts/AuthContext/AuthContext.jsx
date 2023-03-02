@@ -3,6 +3,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import Spinner from '@/components/Spinner';
 
+import { onAuthStateChanged } from 'firebase/auth';
+
 const AuthContext = React.createContext();
 
 export function useAuth() {
@@ -15,7 +17,7 @@ export default function AuthProvider({ children }) {
     
     const [ config, setConfig ] = useState({
         userAuth: null,
-        signout: null,
+        logout: null,
         resetPwd: null,
         updatePwd: null,
     });
@@ -29,27 +31,26 @@ export default function AuthProvider({ children }) {
         if(!auth) return;
 
         const authConfig = async () => {
-            const { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updatePassword, onAuthStateChanged } = await import("firebase/auth")
+            const { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updatePassword } = await import("firebase/auth")
 
             setConfig({
                 userAuth: (email, password, register = false) => register? createUserWithEmailAndPassword(auth, email, password) : signInWithEmailAndPassword(auth, email, password),
-                signout: () => signOut(auth),
+                logout: () => signOut(auth),
                 resetPwd: (email) => sendPasswordResetEmail(auth, email),
                 updatePwd: (password) => currentUser ? updatePassword(currentUser, password) : false,
             })
             
             mounted = true;
-
-            return onAuthStateChanged(auth, user => {
-                // TODO: Trigger => user !== undefined => Share info in context.
-                setLoading(false)
-                setCurrentUser(user)
-            })
         }
 
-        if(!mounted) {
-            authConfig();
-        }
+        if(!mounted) authConfig();
+
+        return onAuthStateChanged(auth, user => {
+            // TODO: Trigger => user !== undefined => Share info in context.
+            console.log(user);
+            setLoading(false);
+            setCurrentUser(user);
+        })
 
     }, []);
     

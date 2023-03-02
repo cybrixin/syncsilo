@@ -87,14 +87,9 @@ export default function Login() {
 					<Navbar.Brand href="/">
 						<span className='brand'>Fire Cloud</span>
 					</Navbar.Brand>
-					<Navbar.Collapse className="justify-content-center">
-						<Navbar.Text style={{color: 'unset'}}>
-							<span className="intro">Sign In Page</span>
-						</Navbar.Text>
-					</Navbar.Collapse>
 				</Container>
       		</Navbar>
-			<CenteredContainer className={styles['centered-container']}>
+			<CenteredContainer style={{'--max-width': '500px'}}>
 				<Card className={styles.card}>
 					<Card.Body>
 						<h4 className={`m-0 mb-2 ${styles.intro}`}>Hi! {greet()}{' '}<span className='emoji'>{greetEmoji()}</span></h4>
@@ -106,7 +101,7 @@ export default function Login() {
 								<Form.Label className={styles.label}>Email&nbsp;<i className={`far fa-asterisk ${styles.asterisk}`}></i></Form.Label>
 								<InputGroup hasValidation >
 									<InputGroup.Text id="inputGroupEmailPrepend"><i className='fas fa-at'></i></InputGroup.Text>
-									<Form.Control type="email" ref={emailRef} disabled={loading} required isValid />
+									<Form.Control type="email" ref={emailRef} disabled={loading} required isValid={validated === true && emailError === false} placeholder="johndoe@example.com" />
 									{ emailError !== false ? (<Form.Control.Feedback type="invalid">
               							{emailError}
             						</Form.Control.Feedback>) : <></> }
@@ -114,12 +109,12 @@ export default function Login() {
 							</Form.Group>
 							<Form.Group id="password" as={Col} className={styles.gap}>
 								<Form.Label className={styles.label}>Password&nbsp;<i className={`far fa-asterisk ${styles.asterisk}`}></i></Form.Label>
-								<InputGroup>
-									<InputGroup.Text id="inputGroupPasswordPrepend"><i className='fas fa-user-secret'></i></InputGroup.Text>
-									<Form.Control type="password" ref={passwordRef} disabled={loading} required isInvalid={validated === true && passwordError !== false} />
-									<Form.Control.Feedback type="invalid">
+								<InputGroup hasValidation>
+									<InputGroup.Text id="inputGroupPasswordPrepend" className=''><i className='fas fa-user-secret'></i></InputGroup.Text>
+									<Form.Control type="password" ref={passwordRef} disabled={loading} required isValid={validated === true && passwordError === false} placeholder="Enter your password" />
+									{ passwordError !== false ? (<Form.Control.Feedback type="invalid">
               							{passwordError}
-            						</Form.Control.Feedback>
+            						</Form.Control.Feedback>) : <></> }
 								</InputGroup>
 							</Form.Group>
 							{error && (<><hr/> <p className={`m-0 mt-2 mb-2 ${styles.intro} ${styles.danger}`} style={{'--font-family': 'Montserrat', '--font-weight': '400',}}><i className='far fa-exclaimation'></i>&nbsp;{error}</p></>)}
