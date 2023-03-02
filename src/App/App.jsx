@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom"
-import PrivateRoute from "@/routes/PrivateRoute";
 
 import AppContext from "@/contexts/AppContext";
 import AuthContext from "@/contexts/AuthContext";
@@ -20,7 +19,7 @@ export default function App() {
             <Routes>
                 <Route path="/signup" element={<Spinner />}></Route>
                 <Route path="/login" element={<Login />}></Route>
-                {/* <Route path="/login" element={<Spinner />}></Route> */}
+                <Route path="/test" element={<TestComponent />}></Route>
 
                 <Route exact path="/" element={<Home />}></Route>
 
