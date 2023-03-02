@@ -14,33 +14,6 @@ import Signup from "@/pages/Signup";
 
 export default function App() {
 
-  const [ mounted, setMounted ] = useState(false);
-
-  const { PUBLIC_FIREBASE_RECAPTCHA_SITE_KEY, PROD } = import.meta.env;
-
-  useEffect( () => {
-    if( mounted || !PROD ) {
-      return;
-    }
-
-    const body = document.body;
-    const script = document.createElement("script");
-    script.src = `https://www.google.com/recaptcha/api.js?render=${PUBLIC_FIREBASE_RECAPTCHA_SITE_KEY}`;
-
-    script.async = true;
-    script.defer = true;
-
-    script.onload = () => {
-      setMounted(true);
-    };
-
-    body.appendChild(script);
-
-    return () => {
-      mounted
-    }
-  }, [])
-
   return (
     
     <Router>
