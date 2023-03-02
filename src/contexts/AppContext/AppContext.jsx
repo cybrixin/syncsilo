@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Spinner from '@/components/Spinner';
-import { collection, doc, setDoc } from 'firebase/firestore';
 
 const { 
     PUBLIC_FIREBASE_API_KEY,
@@ -57,6 +56,8 @@ export default function AppProvider({
 
     useEffect( () => {
         
+        console.log(FIREBASE_CONFIG);
+
         let mounted = false;
         
         const appConfig = async () => {
@@ -100,6 +101,11 @@ export default function AppProvider({
                 ]);
             }
 
+            setFirestoreMethods({
+                collection,
+                doc,
+            })
+
             setConfig({
                 app,
                 auth,
@@ -109,17 +115,11 @@ export default function AppProvider({
                 analytics,
             });
 
-            setFirestoreMethods({
-                collection,
-                doc,
-            })
 
             setLoading(false);
         }
 
-        if(!mounted){
-            appConfig();
-        }
+        appConfig();
 
         return () => {
             mounted = true;
@@ -151,7 +151,7 @@ export default function AppProvider({
         return () => {
             mounted = true;
         }
-    }, [config]);
+    }, [config, firestoreMethods]);
     
 
     return (

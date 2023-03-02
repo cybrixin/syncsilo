@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import url('https://anrcry.github.io/vendor/fontawesome/css/all.css?v=91013c8');
+
+html {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+}
+
+body {
+    all: unset;
+}
+
+.brand, .intro {
+    font-weight: 900;
+    vertical-align: middle;
+    font-size: 1.5rem;
+    font-family: 'Montserrat';
+}
+
+.invalid-feedback, .valid-feedback {
+    font-family: 'Montserrat';
+    font-weight: 700;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.invalid-feedback::before, .valid-feedback::before {
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: 900;
+    font-size: 0.8rem;
+    margin-right: 4px;
+}
+
+.invalid-feedback::before {
+    font-weight: 400;
+    content: '\f071';
+}
+
+.valid-feedback::before {
+    content: '\f12a';
+}
+
+.intro {
+    font-weight: 500;
+}
+
+.emoji {
+    font-family: 'Segoe UI Emoji';
+    font-size: 1.2rem;
+}

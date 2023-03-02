@@ -1,0 +1,46 @@
+.button {
+    width: 100%;
+}
+
+.label {
+    font-family: 'Montserrat';
+    font-weight: 500;
+}
+
+.gap {
+    margin-top: 0.8rem;
+}
+
+.intro, .danger {
+    --font-family: 'Comfortaa';
+    --font-weight: 300;
+    font-family: var(--font-family, 'Roboto');
+    font-weight: var(--font-weight, 400);
+}
+
+.centered-container > .card {
+    --bs-card-border-color: var(--bs-gray-300);
+    box-shadow: 0px 0px 9px 1px  var(--bs-gray-300);
+}
+
+.asterisk {
+    vertical-align: super;
+    /* color: var(--bs-danger); */
+    font-size: x-small;
+}
+
+.danger {
+    --font-family: 'Montserrat';
+    --font-weight: 700;
+    color: var(--bs-danger);
+    font-size: 0.9rem;
+}
+
+.input-group-text-prepend {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.password-eye-button {
+    cursor: pointer;
+}
