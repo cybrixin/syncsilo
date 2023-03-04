@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom"
+import TopNav from "@/components/TopNav";
 
 import TestComponent from '@/components/TestComponent';
 
@@ -15,17 +16,19 @@ export default function App() {
   const { user } = useAuth();
 
   return (
-    
-    <Router>
-      <Routes>
-          <Route path="/signup" element={<Signup />}></Route>
-          <Route path="/login" element={<Login />}></Route>
-          <Route path="/test" element={<TestComponent />}></Route>
+    <>
+      <TopNav />
+      <Router>
+        <Routes>
+            <Route path="/signup" element={<Signup />}></Route>
+            <Route path="/login" element={<Login />}></Route>
+            <Route path="/test" element={<TestComponent />}></Route>
 
-          <Route exact path="/" element={<Home />}></Route>
+            <Route exact path="/" element={<Home />}></Route>
 
-          <Route path="*" element={<NotFound />}></Route>
-      </Routes>
-    </Router>
+            <Route path="*" element={<NotFound />}></Route>
+        </Routes>
+      </Router>
+    </>
   );
 }

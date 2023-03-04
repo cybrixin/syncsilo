@@ -1,6 +1,9 @@
 .brand-image {
+    display: block;
     background-repeat: no-repeat;
-    width: 60px;
-    height: 55px;
-    background-image: url('https://anrcry.github.io/images/icons/logo.svg');
+    height: 35px;
+    background-image: url('/favicon-dark.svg');
+    aspect-ratio: 1/1;
+    scale: 1.2;
+    margin-top: 1px;
 }
