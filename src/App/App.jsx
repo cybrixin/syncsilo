@@ -17,8 +17,8 @@ export default function App() {
 
   return (
     <>
-      <TopNav />
       <Router>
+        <TopNav />
         <Routes>
             <Route path="/signup" element={<Signup />}></Route>
             <Route path="/login" element={<Login />}></Route>

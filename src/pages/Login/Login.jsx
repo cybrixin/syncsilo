@@ -171,7 +171,7 @@ export default function Login() {
 						<Button disabled={loading} variant="outline-primary" size="lg" className={`${styles.button} mt-2`} type="submit">Sign In</Button>
 					</Form>
 					{ !loading ? <div className="w-100 mt-3">
-						Need an account? <Link to="/login">Sign In</Link>
+						Need an account? <Link to="/signup">Sign Up</Link>
 					</div> : <></>}
 				</Card.Body>
 			</Card>

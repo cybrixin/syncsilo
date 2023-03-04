@@ -12,7 +12,7 @@ export function useAuth() {
 }
 
 export default function AuthProvider({ children }) {
-    const [user, setUser] = useState(null);
+    const [ user, setUser ] = useState(null);
     const [ verification, setVerification ] = useState(false);
     
     const [loading, setLoading] = useState(true);
@@ -20,8 +20,9 @@ export default function AuthProvider({ children }) {
     const [ config, setConfig ] = useState({
         authenticate: null,
         logout: null,
-        resetPwd: null,
-        updatePwd: null,
+        reset: null,
+        update: null,
+        verify: null,
     });
 
     const { auth } = useApp();
@@ -42,7 +43,10 @@ export default function AuthProvider({ children }) {
                 update: (obj, pwd = false, user = null) => pwd ? updatePassword(user ?? auth.currentUser, password) : updateProfile(user ?? auth.currentUser, obj),
                 logout: () => signOut(auth),
                 reset: (email) => sendPasswordResetEmail(auth, email),
-                verify: (user = null) => sendEmailVerification(user ?? auth.currentUser),
+                verify: async (user = null) => { 
+                    await sendEmailVerification(user ?? auth.currentUser);
+                    setVerification(true);
+                }
             }
 
             setConfig(obj)
@@ -57,12 +61,6 @@ export default function AuthProvider({ children }) {
             setLoading(false);
             if(!user && verification) {
                 setVerification(false);
-            }else if(user && !user.emailVerified) {
-                obj = obj ?? config;
-                obj.verify().then( (res) => {
-                    setVerification(true);
-                    console.log(res)
-                });
             }
         })
 
@@ -72,6 +70,7 @@ export default function AuthProvider({ children }) {
 
     const value = Object.freeze({
         user,
+        verification,
         ...config,
     });
 
