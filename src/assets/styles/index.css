@@ -11,11 +11,15 @@ body {
     all: unset;
 }
 
-.brand, .intro {
-    font-weight: 900;
+.intro {
+    font-weight: 500;
     vertical-align: middle;
     font-size: 1.5rem;
     font-family: 'Montserrat';
+}   
+
+.navbar-brand{
+	padding: unset;
 }
 
 .invalid-feedback, .valid-feedback {
@@ -25,7 +29,7 @@ body {
     font-size: 0.8rem;
 }
 
-.invalid-feedback::before, .valid-feedback::before {
+.invalid-feedback::before, .valid-feedback::before{
     font-family: 'Font Awesome 5 Pro';
     font-weight: 900;
     font-size: 0.8rem;
@@ -38,11 +42,8 @@ body {
 }
 
 .valid-feedback::before {
+    font-weight: 400;
     content: '\f12a';
-}
-
-.intro {
-    font-weight: 500;
 }
 
 .emoji {

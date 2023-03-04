@@ -10,7 +10,7 @@ svg {
 .container {
   height: 100vh;
   width: 100vw;
-  background-color: #b45309;
+  background-color: rgb(179, 83, 9);
 }
 
 .spin {

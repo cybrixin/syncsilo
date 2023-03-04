@@ -38,21 +38,19 @@ export default function AppProvider({
 }) {
     const [ loading, setLoading ] = useState(true);
 
-    const [ firestoreMethods, setFirestoreMethods ] = useState({
-        collection: null,
-        doc: null
-    });
-
     const [ config, setConfig ] = useState({
         app: null,
         auth: null,
         db: null,
+        cloud: {
+            folders: null,
+            files: null,
+            format: null,
+        },
         storage: null,
         appCheck: null,
         analytics: null,
     });
-
-    const [ database, setDatabase ] = useState(null);
 
     useEffect( () => {
         
@@ -101,19 +99,22 @@ export default function AppProvider({
                 ]);
             }
 
-            setFirestoreMethods({
-                collection,
-                doc,
-            })
 
-            setConfig({
+            setConfig(Object.freeze({
                 app,
                 auth,
                 db,
+                cloud: {
+                    folders: collection(db, "folders"),
+                    files: collection(db, "files"),
+                    format: doc => {
+                        return { id: doc.id, ...doc.data() }
+                    },
+                },
                 storage,
                 appCheck,
                 analytics,
-            });
+            }));
 
 
             setLoading(false);
@@ -125,37 +126,10 @@ export default function AppProvider({
             mounted = true;
         }
     }, []);
-
-
-    useEffect(() => {
-        let mounted = false;
-        
-        const { db }  = config;
-        
-        if(!db) return;
-
-        const { collection, doc } = firestoreMethods;
-        
-        const obj = {
-            folders: collection(db, "folders"),
-            files: collection(db, "files"),
-            formatDoc: doc => {
-                return { id: doc.id, ...doc.data() }
-            },
-            users: collection(db, "users"),
-            user: (uid) => doc(db, "users", uid),
-        };
-
-        setDatabase(obj);
-
-        return () => {
-            mounted = true;
-        }
-    }, [config, firestoreMethods]);
     
 
     return (
-        <AppContext.Provider value={{...config, database}}>
+        <AppContext.Provider value={{...config}}>
           { loading ? <Spinner /> : children }
         </AppContext.Provider>
     )

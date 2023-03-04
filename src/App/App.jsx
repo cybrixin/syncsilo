@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom"
 
-import AppContext from "@/contexts/AppContext";
-import AuthContext from "@/contexts/AuthContext";
-
-import Spinner from "@/components/Spinner";
 import TestComponent from '@/components/TestComponent';
 
 import NotFound from "@/pages/NotFound";
@@ -12,7 +8,11 @@ import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 
+import { useAuth } from '@/contexts/AuthContext';
+
 export default function App() {
+
+  const { user } = useAuth();
 
   return (
     

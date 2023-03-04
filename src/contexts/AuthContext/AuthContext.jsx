@@ -12,11 +12,13 @@ export function useAuth() {
 }
 
 export default function AuthProvider({ children }) {
-    const [currentUser, setCurrentUser] = useState(null);
+    const [user, setUser] = useState(null);
+    const [ verification, setVerification ] = useState(false);
+    
     const [loading, setLoading] = useState(true);
     
     const [ config, setConfig ] = useState({
-        userAuth: null,
+        authenticate: null,
         logout: null,
         resetPwd: null,
         updatePwd: null,
@@ -30,15 +32,20 @@ export default function AuthProvider({ children }) {
 
         if(!auth) return;
 
-        const authConfig = async () => {
-            const { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updatePassword } = await import("firebase/auth")
+        let obj;
 
-            setConfig({
-                userAuth: (email, password, register = false) => register? createUserWithEmailAndPassword(auth, email, password) : signInWithEmailAndPassword(auth, email, password),
+        const authConfig = async () => {
+            const { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updatePassword, updateProfile, sendEmailVerification } = await import("firebase/auth")
+            
+            obj = {
+                authenticate: (email, password, register = false) => register? createUserWithEmailAndPassword(auth, email, password) : signInWithEmailAndPassword(auth, email, password),
+                update: (obj, pwd = false, user = null) => pwd ? updatePassword(user ?? auth.currentUser, password) : updateProfile(user ?? auth.currentUser, obj),
                 logout: () => signOut(auth),
-                resetPwd: (email) => sendPasswordResetEmail(auth, email),
-                updatePwd: (password) => currentUser ? updatePassword(currentUser, password) : false,
-            })
+                reset: (email) => sendPasswordResetEmail(auth, email),
+                verify: (user = null) => sendEmailVerification(user ?? auth.currentUser),
+            }
+
+            setConfig(obj)
             
             mounted = true;
         }
@@ -46,10 +53,17 @@ export default function AuthProvider({ children }) {
         if(!mounted) authConfig();
 
         return onAuthStateChanged(auth, user => {
-            // TODO: Trigger => user !== undefined => Share info in context.
-            console.log(user);
+            setUser(user);
             setLoading(false);
-            setCurrentUser(user);
+            if(!user && verification) {
+                setVerification(false);
+            }else if(user && !user.emailVerified) {
+                obj = obj ?? config;
+                obj.verify().then( (res) => {
+                    setVerification(true);
+                    console.log(res)
+                });
+            }
         })
 
     }, []);
@@ -57,7 +71,7 @@ export default function AuthProvider({ children }) {
 
 
     const value = Object.freeze({
-        currentUser,
+        user,
         ...config,
     });
 
