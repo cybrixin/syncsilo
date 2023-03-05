@@ -1,3 +1,3 @@
-# WeCloud ☁
+# SyncSilo ☁
 
-![WeCloud Hosting](https://github.com/anrcry/wecloud/actions/workflows/firebase.yml/badge.svg?branch=main)
+![SyncSilo Hosting](https://github.com/anrcry/syncsilo/actions/workflows/firebase.yml/badge.svg?branch=main)
