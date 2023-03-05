@@ -1,4 +1,4 @@
-name: "Firebase hosting CI/CD"
+name: "SyncSilo Hosting (CI/CD)"
 on:
   schedule:
     - cron: '0 0 */1 * 0'
@@ -65,7 +65,7 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           channelID: beta
-          target: wecloud
+          target: syncsilo
           expires: 2d
           projectID: anrcry
       - name: "Delete the artifact"
@@ -95,7 +95,7 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           channelID: live
-          target: wecloud
+          target: syncsilo
           projectID: anrcry
       - name: "Delete the artifact"
         if: ${{ always() }}
