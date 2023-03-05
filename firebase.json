@@ -5,7 +5,7 @@
   },
   "hosting": {
     "public": "build",
-    "site": "wecloud",
+    "site": "syncsilo",
     "ignore": [
       "firebase.json",
       "**/.*",
