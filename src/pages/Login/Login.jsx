@@ -87,7 +87,7 @@ export default function Login() {
 
 			await authenticate(email, password);
 
-			logEvent(analytics, 'log_in', {
+			logEvent(analytics, 'login', {
 				method: 'password'
 			})
 
