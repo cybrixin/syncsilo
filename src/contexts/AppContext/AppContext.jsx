@@ -15,6 +15,8 @@ const {
     PUBLIC_FIREBASE_EMULATOR_AUTH_PORT,
     PUBLIC_FIREBASE_EMULATOR_FIRESTORE_PORT,
     PUBLIC_FIREBASE_EMULATOR_STORAGE_PORT,
+    PUBLIC_FIRESTORE_FOLDERS_COLLECTION,
+    PUBLIC_FIRESTORE_FILES_COLLECTION
 } = import.meta.env;
 
 const FIREBASE_CONFIG = {
@@ -67,7 +69,7 @@ export default function AppProvider({
                 { initializeApp }, 
                 { initializeAppCheck, ReCaptchaV3Provider },
                 { getAuth, connectAuthEmulator },
-                { getFirestore, collection, doc, connectFirestoreEmulator },
+                { getFirestore, collection, connectFirestoreEmulator, serverTimestamp },
                 { getStorage, connectStorageEmulator },
                 { getAnalytics }
             ] = await Promise.all([
@@ -105,11 +107,14 @@ export default function AppProvider({
                 auth,
                 db,
                 cloud: {
-                    folders: collection(db, "folders"),
-                    files: collection(db, "files"),
+                    folders: collection(db, PUBLIC_FIRESTORE_FOLDERS_COLLECTION),
+                    folder: (folderId) => collection(db, PUBLIC_FIRESTORE_FOLDERS_COLLECTION, folderId),
+                    files: collection(db, PUBLIC_FIRESTORE_FILES_COLLECTION),
+                    file: (fileId) => collection(db, PUBLIC_FIRESTORE_FILES_COLLECTION, fileId),
                     format: doc => {
                         return { id: doc.id, ...doc.data() }
                     },
+                    getCurrentTimestamp: serverTimestamp,
                 },
                 storage,
                 appCheck,
