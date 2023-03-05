@@ -1,11 +1,9 @@
-import React, { useEffect } from "react"
 
+import Container from 'react-bootstrap/Container';
 import { useAuth } from "@/contexts/AuthContext";
 
-import Button from "react-bootstrap/Button"
+import styles from './Home.module.css';
 
 export default function Home() {
-  const { user } = useAuth();
   
-  return ( user ? 'Hi user!' : 'Hey just login / sign up' );
 }
