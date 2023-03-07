@@ -24,8 +24,6 @@ import { useApp } from '@/contexts/AppContext/AppContext';
 
 import { logEvent } from 'firebase/analytics'
 
-import { fetchSignInMethodsForEmail } from 'firebase/auth'
-
 const { PROD } = import.meta.env;
 
 
@@ -33,6 +31,7 @@ export default function Login() {
 
 
     const [ error, setError ] = useState("");
+	const [ providerError, setProviderError ] = useState("");
 	const [ slash, setSlash ] = useState(false);
     const [ validated, setValidated ] = useState(false);
 	const [ {emailError, passwordError, success} , setFieldError] = useState({
@@ -45,7 +44,7 @@ export default function Login() {
     const navigate = useNavigate();
 
 	const { analytics, auth } = useApp();
-    const { authenticate, user, sso, providers } = useAuth();
+    const { authenticate, user, sso, providers, methods } = useAuth();
 
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -58,6 +57,7 @@ export default function Login() {
 		});
 		setSlash(false);
 		setError("");
+		setProviderError("");
         setLoading(false)
 		setValidated(false);
 	}
@@ -97,7 +97,7 @@ export default function Login() {
 					break;
 				case 'auth/account-exists-with-different-credential':
 					setError(`An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.`);	
-					fetchSignInMethodsForEmail(auth, err.customData.email).then( (signinmethod) => {
+					methods(auth, err.customData.email).then( (signinmethod) => {
 						
 						let provider = Object.keys(providers).filter( value => signinmethod.includes(value));
 
@@ -105,7 +105,7 @@ export default function Login() {
 
 						provider = provider.join(' or ');
 
-						setError( ( (prev) => `${prev} You could try to ${provider}.`) );
+						setProviderError(`Please try to ${provider}.`)
 						
 					}).catch( (err) => console.log(err));
 					
@@ -202,9 +202,6 @@ export default function Login() {
 	useEffect( () => {
 		resetAllState();
 		if(user) navigate('/');
-
-		fetchSignInMethodsForEmail(auth, 'me@anweshan.com').then( (signinmethod) => console.log(signinmethod)).catch( (err) => console.log(err));
-		// fetchProvidersForEmail(auth, 'anweshanrc15@gmail.com').then( arr => console.log(arr)).catch(err => console.log(err));
 	}, []);
     
 
@@ -247,6 +244,7 @@ export default function Login() {
 								</InputGroup>
 							</Form.Group>
 							{error && (<><hr/> <p className={`m-0 mt-2 mb-2 ${styles.intro} ${styles.danger}`} id={styles[!success ? `auth-error` : `auth-success`]} style={{'--font-family': 'Montserrat', '--font-weight': '500',}}>{error}</p></>)}
+							{providerError && (<><hr/> <p className={`m-0 mb-2 ${styles.intro} ${styles.danger}`} style={{'--font-family': 'Montserrat', '--font-weight': '500', 'color': 'var(--bs-info)'}}>{providerError}</p></>)}
 							<hr/>
 							{ !loading ? <div className="w-100 mt-3">
 								<Link to="/forgot-password">Forgot Password?</Link>
