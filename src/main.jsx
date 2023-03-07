@@ -14,7 +14,7 @@ const AuthContext = lazy( () => import('@/contexts/AuthContext'))
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Suspense fallback={<Spinner />}>
-    <AppContext>
+      <AppContext>
         <AuthContext>
           <App />
         </AuthContext>

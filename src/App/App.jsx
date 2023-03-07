@@ -25,6 +25,8 @@ export default function App() {
         <Routes>
             <Route path="/signup" element={<Signup />}></Route>
             <Route path="/login" element={<Login />}></Route>
+
+            <Route path="/test" element={<TestComponent />}></Route>
             
             <Route exact path="/folder/:folderId" element={user ? <Dashboard/> : <Navigate to="/" />}></Route>
 
