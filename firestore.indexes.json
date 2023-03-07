@@ -1,24 +1,41 @@
 {
-  "indexes": [],
-  "fieldOverrides": [
+  "indexes": [
     {
-      "collectionGroup": "messages",
-      "fieldPath": "email",
-      "ttl": false,
-      "indexes": [
+      "collectionGroup": "files",
+      "queryScope": "COLLECTION",
+      "fields": [
         {
-          "order": "ASCENDING",
-          "queryScope": "COLLECTION"
+          "fieldPath": "folderId",
+          "order": "ASCENDING"
         },
         {
-          "order": "DESCENDING",
-          "queryScope": "COLLECTION"
+          "fieldPath": "userId",
+          "order": "ASCENDING"
         },
         {
-          "arrayConfig": "CONTAINS",
-          "queryScope": "COLLECTION"
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "folders",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "parentId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "userId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
         }
       ]
     }
-  ]
+  ],
+  "fieldOverrides": []
 }

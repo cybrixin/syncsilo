@@ -97,7 +97,7 @@ export default function Login() {
 					break;
 				case 'auth/account-exists-with-different-credential':
 					setError(`An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.`);	
-					methods(auth, err.customData.email).then( (signinmethod) => {
+					methods(err.customData.email).then( (signinmethod) => {
 						
 						let provider = Object.keys(providers).filter( value => signinmethod.includes(value));
 

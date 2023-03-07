@@ -83,7 +83,7 @@ export default function useFolder(folderId = null, folder = null) {
 
     useEffect(() => {
         
-        const q =  query(cloud.folders, where("parentId", "==", folderId), where("userId", "==", user.uid), /* orderBy("createdAt") */);
+        const q =  query(cloud.folders, where("parentId", "==", folderId), where("userId", "==", user.uid), orderBy("createdAt"));
         return onSnapshot(q, (snapshot) => {
             dispatch({
                 type: ACTIONS.SET_CHILD_FOLDERS,
@@ -93,7 +93,7 @@ export default function useFolder(folderId = null, folder = null) {
     }, [folderId, user]);
 
     useEffect(() => {
-        let q = query(cloud.files, where("folderId", "==", folderId), where("userId", "==", user.uid), /* orderBy("createdAt") */);
+        let q = query(cloud.files, where("folderId", "==", folderId), where("userId", "==", user.uid), orderBy("createdAt"));
 
         return onSnapshot(q , (snapshot) => {
             dispatch({
