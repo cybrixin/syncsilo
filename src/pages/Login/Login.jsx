@@ -1,3 +1,5 @@
+import '@/assets/styles/Auth.css';
+
 import styles from '@/assets/styles/Auth.module.css';
 
 import React, { useRef, useState, useEffect } from "react"
@@ -6,8 +8,7 @@ import CenteredContainer from "@/components/CenteredContainer"
 
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
-import Container from 'react-bootstrap/Container'
-import Navbar from 'react-bootstrap/Navbar';
+import Stack from 'react-bootstrap/Stack'
 import Card from 'react-bootstrap/Card'
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -38,7 +39,7 @@ export default function Login() {
     const navigate = useNavigate();
 
 	const { analytics } = useApp();
-    const { authenticate, user } = useAuth();
+    const { authenticate, user, sso } = useAuth();
 
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -53,6 +54,14 @@ export default function Login() {
 		setError("");
         setLoading(false)
 		setValidated(false);
+	}
+
+	async function handleSSO (evt) {
+		try {
+
+		}catch ( err ) {
+
+		}
 	}
 
     async function handleSubmit (evt) {
@@ -134,7 +143,7 @@ export default function Login() {
     
 
     return (
-		<CenteredContainer style={{'--max-width': '500px'}}>
+		<CenteredContainer style={{'--max-width': '800px'}}>
 			<Card className={styles.card}>
 				<Card.Body>
 					<h4 className={`m-0 mb-2 ${styles.intro}`}>Hi! {greet()}{' '}<span className='emoji'>{greetEmoji()}</span></h4>
@@ -168,8 +177,17 @@ export default function Login() {
 						{ !loading ? <div className="w-100 mt-3">
 							<Link to="/forgot-password">Forgot Password?</Link>
 						</div> : <></> }
-						<Button disabled={loading} variant="outline-primary" size="lg" className={`${styles.button} mt-2`} type="submit">Sign In</Button>
+						<Button disabled={loading} variant="outline-primary" className={`${styles.button} mt-2`} type="submit">Sign In</Button>
 					</Form>
+					<div className="w-100 border border-dark mt-3 h-0 mb-3" id={styles['or']} data-content="OR"></div>
+					<Stack direction="horizontal" gap={3} className="me-auto w-100">
+						<Button className="w-50 text-start vertical-middle" variant="outline-dark" style={{'--bs-btn-hover-border-color': '#db4437', '--bs-btn-hover-bg': '#db4437'}} onClick={handleSSO} data-provider="facebook"><i className="fab fa-google"></i>&nbsp;Sign up with Google</Button>
+						<div className="vr" />
+						<Button className="w-50 text-start vertical-middle" variant="outline-dark" style={{'--bs-btn-hover-border-color': '#3c5a99', '--bs-btn-hover-bg': '#3c5a99'}} onClick={handleSSO} data-provider="facebook"><i className="fab fa-facebook"></i>&nbsp;Sign up with Facebook</Button>
+						<div className="vr" />
+						<Button className="w-50 text-start vertical-middle" variant="outline-dark" style={{'--bs-btn-hover-border-color': '#1da1f2', '--bs-btn-hover-bg': '#1da1f2'}} onClick={handleSSO} data-provider="twitter"><i className="fab fa-twitter"></i>&nbsp;Sign up with Twitter</Button>
+					</Stack>
+					<hr/>
 					{ !loading ? <div className="w-100 mt-3">
 						Need an account? <Link to="/signup">Sign Up</Link>
 					</div> : <></>}

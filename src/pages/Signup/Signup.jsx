@@ -1,3 +1,4 @@
+import '@/assets/styles/Auth.css';
 import styles from '@/assets/styles/Auth.module.css';
 
 import React, { useRef, useState, useEffect } from "react"
@@ -9,6 +10,7 @@ import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup';
+import Stack from 'react-bootstrap/Stack';
 
 import { greet, greetEmoji } from '@/util/util';
 
@@ -37,7 +39,7 @@ export default function Signup() {
     const navigate = useNavigate();
 
 	const { analytics } = useApp();
-    const { authenticate, update, user } = useAuth();
+    const { authenticate, update, user, sso, verify } = useAuth();
 
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -57,6 +59,10 @@ export default function Signup() {
 		setError("");
         setLoading(false)
 		setValidated(false);
+	}
+
+	async function handleSSO( evt ) {
+
 	}
 
     async function handleSubmit (evt) {
@@ -116,6 +122,8 @@ export default function Signup() {
 				photoURL: `https://api.dicebear.com/5.x/initials/svg?seed=${name}`,
 			}, false, res.user);
 
+			await verify(res.user);
+			
 			navigate('/');
 			
 			return;
@@ -202,10 +210,19 @@ export default function Signup() {
 					</Form.Group>
 					{error && (<><hr/> <p className={`m-0 mt-2 mb-2 ${styles.intro} ${styles.danger}`} id={styles[!success ? `auth-error` : `auth-success`]} style={{'--font-family': 'Montserrat', '--font-weight': '500',}}>{error}</p></>)}
 					<hr/>
-					<Button disabled={loading} variant="outline-primary" size="lg" className={`${styles.button} mt-2`} type="submit">Sign Up</Button>
+					<Button disabled={loading} variant="outline-primary" className={`${styles.button}`} type="submit">Sign Up</Button>
 				</Form>
+				<div className="w-100 border border-dark mt-3 h-0 mb-3" id={styles['or']} data-content="OR"></div>
+				<Stack direction="horizontal" gap={3} className="me-auto w-100">
+					<Button className="w-50 text-start vertical-middle" variant="outline-dark" style={{'--bs-btn-hover-border-color': '#db4437', '--bs-btn-hover-bg': '#db4437'}} onClick={handleSSO} data-provider="facebook"><i className="fab fa-google"></i>&nbsp;Sign up with Google</Button>
+					<div className="vr" />
+					<Button className="w-50 text-start vertical-middle" variant="outline-dark" style={{'--bs-btn-hover-border-color': '#3c5a99', '--bs-btn-hover-bg': '#3c5a99'}} onClick={handleSSO} data-provider="facebook"><i className="fab fa-facebook"></i>&nbsp;Sign up with Facebook</Button>
+					<div className="vr" />
+					<Button className="w-50 text-start vertical-middle" variant="outline-dark" style={{'--bs-btn-hover-border-color': '#1da1f2', '--bs-btn-hover-bg': '#1da1f2'}} onClick={handleSSO} data-provider="twitter"><i className="fab fa-twitter"></i>&nbsp;Sign up with Twitter</Button>
+				</Stack>
+				<hr/>
 				{ !loading ? <div className="w-100 mt-3">
-					Need an account? <Link to="/login">Sign In</Link>
+					Already have an account? <Link to="/login">Sign In</Link>
 				</div> : <></>}
 			</Card.Body>
 		</Card>
