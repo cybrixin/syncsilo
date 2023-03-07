@@ -24,6 +24,7 @@ export default function AuthProvider({ children }) {
         reset: null,
         update: null,
         verify: null,
+        sso: null,
     });
 
     const { auth } = useApp();
