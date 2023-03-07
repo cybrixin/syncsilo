@@ -4,11 +4,13 @@ import Alert from 'react-bootstrap/Alert'
 import { useEffect } from 'react';
 
 export default function Home() {
-
+    
     useEffect(() => {
+
+        const { PUBLIC_RAZORPAY_BUTTON_ID } = import.meta.env;
       let script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/payment-button.js";
-      script.setAttribute("data-payment_button_id", "pl_LOaT2ySIZSmfvN");
+      script.setAttribute("data-payment_button_id", PUBLIC_RAZORPAY_BUTTON_ID);
 
       script.async = true;
 
