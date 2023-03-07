@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 
 import Navbar from "react-bootstrap/Navbar"
 import Container from "react-bootstrap/Container"
@@ -46,7 +46,7 @@ export default function TopNav() {
         <Navbar.Collapse className="justify-content-end">
           { !user ? (
             <Navbar.Text>
-              <a role="button" id={styles["login-link"]} onClick={handleAuth}><i className="fas fa-user-visor"></i></a>
+              <a as={<Link />} id={styles["login-link"]} onClick={handleAuth}>{link === '/login' ? 'Login' : 'Sign up'}</a>
             </Navbar.Text>
           ) : (
             <Dropdown align='end' autoClose={true} onToggle={ (res) => setShow(res)}>

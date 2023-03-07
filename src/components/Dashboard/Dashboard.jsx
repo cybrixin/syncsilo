@@ -8,7 +8,7 @@ import AddFolderButton from "@/components/AddFolderButton"
 import AddFileButton from "@/components/AddFileButton"
 import Folder from "@/components/Folder"
 import File from "@/components/File"
-import FolderBreadcrumbs from "@/components/FolderBreadcrumbs"
+import FolderBreadCrumbs from "@/components/FolderBreadCrumbs"
 import { useParams, useLocation } from "react-router-dom"
 
 export default function Dashboard() {
@@ -35,13 +35,13 @@ export default function Dashboard() {
   return (
     <Container fluid className="mt-4">
         { (!verification && show) ? 
-        <Alert variant="warning" onClose={() => setShow(false)} dissmissible>
-            <Alert.Heading>Just a warning!</Alert.Heading>
+        <Alert variant="warning" onClose={() => setShow(false)} dismissible>
+            <Alert.Heading>Before you proceed!</Alert.Heading>
             <hr/>
-            Your account is not verified. { verificationEmail ? <span>We have already sent you a verification email to your inbox</span> : <a href='#' role={"button"} onClick={handleVerify}>Click here to verify your account</a>}.
+            Your email address is not verified. { verificationEmail ? <span>We have already sent you a verification email to your inbox</span> : <a href='#' role={"button"} onClick={handleVerify}>Click here to verify your account</a>}.
           </Alert> : <></> }
         <div className="d-flex align-items-center">
-          <FolderBreadcrumbs currentFolder={folder} />
+          <FolderBreadCrumbs currentFolder={folder} />
           <AddFileButton currentFolder={folder} />
           <AddFolderButton currentFolder={folder} />
         </div>

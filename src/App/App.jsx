@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Navigate, BrowserRouter as Router, Route, Link, Routes } from "react-router-dom"
+import Container from "react-bootstrap/Container";
 import TopNav from "@/components/TopNav";
 
 import TestComponent from '@/components/TestComponent';
@@ -34,6 +35,12 @@ export default function App() {
 
             <Route path="*" element={<NotFound />}></Route>
         </Routes>
+        <footer style={{marginTop: "220px"}}>
+          <hr/>
+          <Container fluid className="mt-2 p-0">
+              <p className="text-center" style={{fontFamily: "Comfortaa"}}>Built with 💖 by Anweshan Roy Chowdhury.</p>
+          </Container>
+        </footer>
       </Router>
     </>
   );

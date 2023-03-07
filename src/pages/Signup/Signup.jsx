@@ -159,7 +159,7 @@ export default function Signup() {
 
     return (
 	<CenteredContainer style={{'--max-width': '800px'}}>
-		<Card className={styles.card}>
+		<Card className={`${styles.card} mt-4`}>
 			<Card.Body>
 				<h4 className={`m-0 mb-2 ${styles.intro}`}>Hi! {greet()}{' '}<span className='emoji'>{greetEmoji()}</span></h4>
 				<p className={`m-0 mb-2 ${styles.intro}`} style={{'--font-family': 'Montserrat', '--font-weight': '400',}}>We are glad to have you here. Just sign up with some details and lets hop on the journey together 🤝🏻!</p>

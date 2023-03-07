@@ -1,1 +1,1 @@
-export { default } from './FolderBreadCrums';
+export { default } from './FolderBreadCrumbs';

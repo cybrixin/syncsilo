@@ -63,10 +63,13 @@
 }
 
 #login-link {
-    font-size: 1.8rem;
+    font-size: 1rem;
     transition: color 150ms ease-in-out;
+    text-decoration: underline;
+    color: var(--bs-white);
+    cursor: pointer;
 }
 
 #login-link:hover {
-    color: var(--bs-white);
+    color: var(--bs-gray-200);
 }
