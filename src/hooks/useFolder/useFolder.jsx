@@ -52,7 +52,7 @@ export default function useFolder(folderId = null, folder = null) {
         folder,
         childFolders: [],
         childFiles: [],
-    })
+    });
 
     useEffect(() => {
         dispatch({ type: ACTIONS.SELECT_FOLDER, payload: { folderId, folder } })
@@ -66,11 +66,11 @@ export default function useFolder(folderId = null, folder = null) {
             })
         }
 
-        return getDoc(cloud.folder(folderId))
+        getDoc(cloud.folder(folderId))
         .then(doc => {
             dispatch({
                 type: ACTIONS.UPDATE_FOLDER,
-                payload: { folder: cloud.formatDoc(doc) },
+                payload: { folder: cloud.format(doc) },
             })
         })
         .catch(() => {
@@ -82,11 +82,12 @@ export default function useFolder(folderId = null, folder = null) {
     }, [folderId]);
 
     useEffect(() => {
+        
         const q =  query(cloud.folders, where("parentId", "==", folderId), where("userId", "==", user.uid), /* orderBy("createdAt") */);
         return onSnapshot(q, (snapshot) => {
             dispatch({
                 type: ACTIONS.SET_CHILD_FOLDERS,
-                payload: { childFolders: snapshot.docs.map(cloud.formatDoc) },
+                payload: { childFolders: snapshot.docs.map(cloud.format) },
             })
         })
     }, [folderId, user]);
@@ -97,11 +98,11 @@ export default function useFolder(folderId = null, folder = null) {
         return onSnapshot(q , (snapshot) => {
             dispatch({
                 type: ACTIONS.SET_CHILD_FILES,
-                payload: { childFiles: snapshot.docs.map(cloud.formatDoc) },
+                payload: { childFiles: snapshot.docs.map(cloud.format) },
             })
         })
         
     }, [folderId, user]);
 
-    return state
+    return state;
 }
