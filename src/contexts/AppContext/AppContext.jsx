@@ -69,7 +69,7 @@ export default function AppProvider({
                 { initializeApp }, 
                 { initializeAppCheck, ReCaptchaV3Provider },
                 { getAuth, connectAuthEmulator },
-                { getFirestore, collection, connectFirestoreEmulator, serverTimestamp },
+                { getFirestore, collection, doc ,connectFirestoreEmulator, serverTimestamp },
                 { getStorage, connectStorageEmulator },
                 { getAnalytics }
             ] = await Promise.all([
@@ -108,9 +108,9 @@ export default function AppProvider({
                 db,
                 cloud: {
                     folders: collection(db, PUBLIC_FIRESTORE_FOLDERS_COLLECTION),
-                    folder: (folderId) => collection(db, PUBLIC_FIRESTORE_FOLDERS_COLLECTION, folderId),
+                    folder: (folderId) => doc(db, PUBLIC_FIRESTORE_FOLDERS_COLLECTION, folderId),
                     files: collection(db, PUBLIC_FIRESTORE_FILES_COLLECTION),
-                    file: (fileId) => collection(db, PUBLIC_FIRESTORE_FILES_COLLECTION, fileId),
+                    file: (fileId) => doc(db, PUBLIC_FIRESTORE_FILES_COLLECTION, fileId),
                     format: doc => {
                         return { id: doc.id, ...doc.data() }
                     },

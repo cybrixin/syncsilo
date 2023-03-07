@@ -14,6 +14,7 @@ export function useAuth() {
 export default function AuthProvider({ children }) {
     const [ user, setUser ] = useState(null);
     const [ verification, setVerification ] = useState(false);
+    const [ verificationEmail, setVerificationEmail ] = useState(false);
     
     const [loading, setLoading] = useState(true);
     
@@ -36,16 +37,17 @@ export default function AuthProvider({ children }) {
         let obj;
 
         const authConfig = async () => {
-            const { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updatePassword, updateProfile, sendEmailVerification } = await import("firebase/auth")
+            const { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updatePassword, updateProfile, sendEmailVerification, GoogleAuthProvider, signInWithPopup } = await import("firebase/auth")
             
             obj = {
                 authenticate: (email, password, register = false) => register? createUserWithEmailAndPassword(auth, email, password) : signInWithEmailAndPassword(auth, email, password),
+                sso: (provider = 'google') => signInWithPopup(auth, new GoogleAuthProvider()),
                 update: (obj, pwd = false, user = null) => pwd ? updatePassword(user ?? auth.currentUser, password) : updateProfile(user ?? auth.currentUser, obj),
                 logout: () => signOut(auth),
                 reset: (email) => sendPasswordResetEmail(auth, email),
                 verify: async (user = null) => { 
                     await sendEmailVerification(user ?? auth.currentUser);
-                    setVerification(true);
+                    setVerificationEmail(true);
                 }
             }
 
@@ -59,8 +61,10 @@ export default function AuthProvider({ children }) {
         return onAuthStateChanged(auth, user => {
             setUser(user);
             setLoading(false);
-            if(!user && verification) {
-                setVerification(false);
+            setVerification(false);
+
+            if(user) {
+                setVerification(user.emailVerified);
             }
         })
 
@@ -71,6 +75,7 @@ export default function AuthProvider({ children }) {
     const value = Object.freeze({
         user,
         verification,
+        verificationEmail,
         ...config,
     });
 
