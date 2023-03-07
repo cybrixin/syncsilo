@@ -1,0 +1,29 @@
+button[data-provider]{
+    --bs-btn-border-color: var(--bs-btn-hover-border-color) !important;
+    --bs-btn-active-border-color: var(--bs-btn-hover-border-color) !important;
+    --bs-btn-active-bg: var(--bs-btn-hover-bg) !important;
+    --transition-time: 200ms;
+    transition: color var(--transition-time, 200ms) ease-in-out, background-color var(--transition-time, 200ms) ease-in-out;
+}
+
+button[data-provider]:not(:hover, :focus, :active, :disabled, :focus-within, :focus-visible), button[data-provider]:not(:hover, :focus, :active, :disabled, :focus-within, :focus-visible) > i {
+    color: var(--bs-btn-hover-border-color) !important;
+    transition: color var(--transition-time, 200ms) ease-in-out, background-color var(--transition-time, 200ms) ease-in-out;
+}
+
+@media (max-width: 768px) {
+    .hstack {
+        flex-direction: column !important;
+        gap: 0.8rem !important;
+    }
+
+    .hstack > button {
+        width: 100% !important;
+    }
+
+    .hstack .vr {
+        width: 100%;
+        min-height: 1px;
+    }
+    
+}
