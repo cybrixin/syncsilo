@@ -12,6 +12,7 @@ import Col from 'react-bootstrap/Col'
 import Stack from 'react-bootstrap/Stack'
 import Card from 'react-bootstrap/Card'
 import Form from 'react-bootstrap/Form'
+import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
 
 import { greet, greetEmoji } from '@/util/util';
@@ -22,6 +23,10 @@ import { useNavigate, Link } from "react-router-dom"
 import { useApp } from '@/contexts/AppContext/AppContext';
 
 import { logEvent } from 'firebase/analytics'
+
+import { fetchSignInMethodsForEmail } from 'firebase/auth'
+
+const { PROD } = import.meta.env;
 
 
 export default function Login() {
@@ -39,8 +44,8 @@ export default function Login() {
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
 
-	const { analytics } = useApp();
-    const { authenticate, user, sso } = useAuth();
+	const { analytics, auth } = useApp();
+    const { authenticate, user, sso, providers } = useAuth();
 
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -66,12 +71,53 @@ export default function Login() {
 		try {
 			const provider = evt.target.dataset.provider;
 
-			// await sso(provider);
+			await sso(provider);
+
+			logEvent(analytics, 'login', {
+				method: provider
+			});
+
+			navigate('/');
+
+			return;
 
 		}catch ( err ) {
+			console.log(err.code);
+			console.log(err.message);
+			console.log(err.email);
+			console.table(err.customData.email);
 
+
+			switch(err.code) {
+				case 'auth/user-not-found':
+					setError(`No account was found. Please sign up first.`);
+					break;
+				case 'auth/user-disabled':
+					setError(`The follwing account has been disabled by the system administrator. Please contact them & try again!`);
+					break;
+				case 'auth/account-exists-with-different-credential':
+					setError(`An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.`);	
+					fetchSignInMethodsForEmail(auth, err.customData.email).then( (signinmethod) => {
+						
+						let provider = Object.keys(providers).filter( value => signinmethod.includes(value));
+
+						provider = provider.map( key => providers[key] );
+
+						provider = provider.join(' or ');
+
+						setError( ( (prev) => `${prev} You could try to ${provider}.`) );
+						
+					}).catch( (err) => console.log(err));
+					
+					break;
+				case 'auth/credential-already-in-use':
+					setError('This credential is already associated with a different user account.');
+					break;
+				default:
+					setError(`There were some internal errors. Please report to us with ${err.code} if required!`);
+			}
 		}finally {
-			setLoading(!true)
+			setLoading(!true);
 		}
 	}
 
@@ -128,6 +174,12 @@ export default function Login() {
 				case 'auth/user-disabled':
 					setError(`The follwing account has been disabled by the system administrator. Please contact them & try again!`);
 					break;
+				case 'auth/account-exists-with-different-credential':
+					setError('An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.');
+					break;
+				case 'auth/credential-already-in-use':
+					setError('This credential is already associated with a different user account.');
+					break;
 				case 'auth/invalid-email':
 					setError(`The email address you have entered is invalid!`);
 					break;
@@ -150,6 +202,9 @@ export default function Login() {
 	useEffect( () => {
 		resetAllState();
 		if(user) navigate('/');
+
+		fetchSignInMethodsForEmail(auth, 'me@anweshan.com').then( (signinmethod) => console.log(signinmethod)).catch( (err) => console.log(err));
+		// fetchProvidersForEmail(auth, 'anweshanrc15@gmail.com').then( arr => console.log(arr)).catch(err => console.log(err));
 	}, []);
     
 
@@ -200,11 +255,13 @@ export default function Login() {
 						</Form>
 						<div className="w-100 border border-dark mt-3 h-0 mb-3" id={styles['or']} data-content="OR"></div>
 						<Stack direction="horizontal" gap={3} className="me-auto w-100">
-							<Button className="w-50 text-start vertical-middle" variant="outline-dark" style={{'--bs-btn-hover-border-color': '#db4437', '--bs-btn-hover-bg': '#db4437'}} onClick={handleSSO} data-provider="google" disabled={true}><i className="fab fa-google"></i>&nbsp;Sign in with Google</Button>
+							<Button className="w-50 text-start vertical-middle" variant="outline-dark" style={{'--bs-btn-hover-border-color': '#db4437', '--bs-btn-hover-bg': '#db4437'}} onClick={handleSSO} data-provider="google" disabled={loading}><i className="fab fa-google"></i>&nbsp;Sign in with Google</Button>
 							<div className="vr" />
-							<Button className="w-50 text-start vertical-middle" variant="outline-dark" style={{'--bs-btn-hover-border-color': '#3c5a99', '--bs-btn-hover-bg': '#3c5a99'}} onClick={handleSSO} data-provider="facebook" disabled={true}><i className="fab fa-facebook"></i>&nbsp;Sign in with Facebook</Button>
+							<Button className="w-50 text-start vertical-middle" variant="outline-dark" onClick={handleSSO} data-provider="github" disabled={loading}><i className="fab fa-github"></i>&nbsp;Sign in with Github</Button>
 							<div className="vr" />
-							<Button className="w-50 text-start vertical-middle" variant="outline-dark" style={{'--bs-btn-hover-border-color': '#1da1f2', '--bs-btn-hover-bg': '#1da1f2'}} onClick={handleSSO} data-provider="twitter" disabled={true}><i className="fab fa-twitter"></i>&nbsp;Sign in with Twitter</Button>
+							<Button className="w-50 text-start vertical-middle" variant="outline-dark" style={{'--bs-btn-hover-border-color': '#3c5a99', '--bs-btn-hover-bg': '#3c5a99'}} onClick={handleSSO} data-provider="facebook" disabled={!PROD ? loading : PROD}><i className="fab fa-facebook"></i>&nbsp;Sign in with Facebook</Button>
+							{/* <div className="vr" /> */}
+							{/* <Button className="w-50 text-start vertical-middle" variant="outline-dark" style={{'--bs-btn-hover-border-color': '#1da1f2', '--bs-btn-hover-bg': '#1da1f2'}} onClick={handleSSO} data-provider="twitter" disabled={PROD}><i className="fab fa-twitter"></i>&nbsp;Sign in with Twitter</Button> */}
 						</Stack>
 						<hr/>
 						{ !loading ? <div className="w-100 mt-3">
@@ -216,3 +273,43 @@ export default function Login() {
 		</>
     )
 }
+
+
+// function forgetPassword({state: [open, setOpen]}) {
+
+// 	const [name, setName] = useState("")
+
+// 	function openModal() {
+// 		setOpen(true)
+// 	}
+	
+// 	function closeModal() {
+// 		setOpen(false)
+// 	}
+
+// 	return (
+// 		<Modal>
+// 			<Form>
+// 				<Modal.Body>
+// 					<Form.Group>
+// 					<Form.Label>Forget Password</Form.Label>
+// 					<Form.Control
+// 						type="text"
+// 						required
+// 						value={name}
+// 						onChange={e => setName(e.target.value)}
+// 					/>
+// 					</Form.Group>
+// 				</Modal.Body>
+// 				<Modal.Footer>
+// 					<Button variant="secondary">
+// 					Close
+// 					</Button>
+// 					<Button variant="success" type="submit">
+// 					Add Folder
+// 					</Button>
+// 				</Modal.Footer>
+// 			</Form>
+// 		</Modal>
+//   	)
+// }

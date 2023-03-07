@@ -38,11 +38,18 @@ export default function AuthProvider({ children }) {
         let obj;
 
         const authConfig = async () => {
-            const { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updatePassword, updateProfile, sendEmailVerification, GoogleAuthProvider, signInWithPopup } = await import("firebase/auth")
+            const { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updatePassword, updateProfile, sendEmailVerification, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider, EmailAuthProvider ,signInWithPopup, fetchSignInMethodsForEmail } = await import("firebase/auth")
             
             obj = {
                 authenticate: (email, password, register = false) => register? createUserWithEmailAndPassword(auth, email, password) : signInWithEmailAndPassword(auth, email, password),
-                sso: (provider = 'google') => signInWithPopup(auth, new GoogleAuthProvider()),
+                sso: (provider = 'google') => signInWithPopup(auth, provider === 'google' ? new GoogleAuthProvider() : (provider === 'facebook' ? new FacebookAuthProvider() : new GithubAuthProvider())),
+                providers : {
+					[GoogleAuthProvider.providerId]: 'Sign In with Google',
+					[FacebookAuthProvider.providerId]: 'Sign In with Facebook',
+					[GithubAuthProvider.providerId]: 'Sign in with Github',
+					[EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD]: 'Sign in with email and password',
+				},
+                methods: (email) => fetchSignInMethodsForEmail(auth, email),
                 update: (obj, pwd = false, user = null) => pwd ? updatePassword(user ?? auth.currentUser, password) : updateProfile(user ?? auth.currentUser, obj),
                 logout: () => signOut(auth),
                 reset: (email) => sendPasswordResetEmail(auth, email),
@@ -51,6 +58,8 @@ export default function AuthProvider({ children }) {
                     setVerificationEmail(true);
                 }
             }
+
+            console.log({...obj})
 
             setConfig(obj)
             
