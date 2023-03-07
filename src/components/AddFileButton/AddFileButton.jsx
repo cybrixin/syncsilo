@@ -9,12 +9,14 @@ import Toast from "react-bootstrap/Toast"
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { query, where, getDocs, setDoc, doc } from 'firebase/firestore';
 
+import { logEvent } from "firebase/analytics";
+
 const { PUBLIC_FIREBASE_APP_NAME='syncsilo' } = import.meta.env;
 
 export default function AddFileButton({ currentFolder }) {
   const [uploadingFiles, setUploadingFiles] = useState([])
   const { user } = useAuth()
-  const { storage, cloud } = useApp();
+  const { storage, cloud, analytics } = useApp();
 
   function handleUpload(e) {
 
@@ -66,6 +68,10 @@ export default function AddFileButton({ currentFolder }) {
       },
       () => {
         setUploadingFiles(prevUploadingFiles => {
+          logEvent(analytics, 'add_file', {
+            success: false,
+            user: user.uid
+          });
           return prevUploadingFiles.map(uploadFile => {
             if (uploadFile.id === id) {
               return { ...uploadFile, error: true }
@@ -85,6 +91,11 @@ export default function AddFileButton({ currentFolder }) {
           // let q = query(cloud.files, where("name", "==", file.name), where("userId", "==", user.uid), where("folderId", "==", currentFolder.id));
           
           // let docs = await getDocs(q);
+
+          logEvent(analytics, 'add_file', {
+            success: true,
+            user: user.uid
+          });
 
           const newFile = doc(cloud.files);
           

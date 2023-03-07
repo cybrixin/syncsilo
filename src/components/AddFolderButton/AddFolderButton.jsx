@@ -44,8 +44,14 @@ export default function AddFolderButton({currentFolder}) {
       path: path,
       createdAt: cloud.getCurrentTimestamp(),
     }).then( () => {
-      logEvent(analytics, 'add_folder', {
-        uid: user.uid
+      logEvent(analytics, 'add_file', {
+        success: true,
+        user: user.uid
+      });
+    }).catch( () => {
+      logEvent(analytics, 'add_file', {
+        success: false,
+        user: user.uid
       });
     });
 
