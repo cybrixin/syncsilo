@@ -1,8 +1,5 @@
-name: "SyncSilo Hosting (CI/CD)"
+name: "syncsilo-cybrix Hosting (CI/CD)"
 on:
-  schedule:
-    - cron: '0 0 */1 * 0'
-    
   push:
     paths:
       - "src/**"
@@ -33,6 +30,9 @@ jobs:
     steps:
       - name: "Checkout to the branch"
         uses: actions/checkout@v3
+        if: ${{ github.event_name == 'pull_request' || (github.event_name == 'schedule' && github.ref_name == 'main') }}
+        with:
+          ref: 'main'
       - name: "Node.js setup"
         uses: actions/setup-node@v3
         with:
@@ -65,7 +65,7 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           channelID: beta
-          target: syncsilo
+          target: syncsilo-cybrix
           expires: 2d
           projectID: anrcry
       - name: "Delete the artifact"
@@ -95,7 +95,7 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           channelID: live
-          target: syncsilo
+          target: syncsilo-cybrix
           projectID: anrcry
       - name: "Delete the artifact"
         if: ${{ always() }}

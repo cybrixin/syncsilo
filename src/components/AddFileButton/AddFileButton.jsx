@@ -32,7 +32,7 @@ export default function AddFileButton({ currentFolder }) {
 
     const currentFolderId = currentFolder.id;
 
-    let filePath = ['', PUBLIC_FIREBASE_APP_NAME, user.uid];
+    let filePath = ['', PUBLIC_FIREBASE_APP_NAME, user.uid]; // /syncsilo/abcdefgh/hhhhh/img.png
 
     if(currentFolderId !== null) {
       // move forward

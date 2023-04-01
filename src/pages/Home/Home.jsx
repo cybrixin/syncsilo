@@ -9,7 +9,8 @@ export default function Home() {
     
     useEffect(() => {
 
-        const { PUBLIC_RAZORPAY_BUTTON_ID } = import.meta.env;
+        const { PUBLIC_RAZORPAY_BUTTON_ID, PROD } = import.meta.env;
+        console.log(PUBLIC_RAZORPAY_BUTTON_ID, PROD)
       let script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/payment-button.js";
       script.setAttribute("data-payment_button_id", PUBLIC_RAZORPAY_BUTTON_ID);
