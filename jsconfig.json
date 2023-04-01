@@ -14,5 +14,5 @@
             "@/routes/*": ["routes/*"],
         }
     },
-    "exclude": ["node-modules"]
+    "exclude": ["node-modules", "public/fontawesome"]
 }

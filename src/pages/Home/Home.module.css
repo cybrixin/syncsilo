@@ -1,0 +1,17 @@
+.container-fluid {
+    margin-top: 0px;
+    margin-left: auto;
+    position: relative;
+    margin-right: auto;
+    padding: 60px 50px;
+    font-family: 'Comfortaa';
+}
+
+.blockquote {
+    background: #f9f9f9;
+    border-left: 10px solid var(--secondary);
+    margin: auto;
+    padding: 2.4em 3.1em;
+    quotes: "\201C""\201D""\2018""\2019";
+    text-align: justify;
+}

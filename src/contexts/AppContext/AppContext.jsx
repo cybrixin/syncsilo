@@ -15,6 +15,8 @@ const {
     PUBLIC_FIREBASE_EMULATOR_AUTH_PORT,
     PUBLIC_FIREBASE_EMULATOR_FIRESTORE_PORT,
     PUBLIC_FIREBASE_EMULATOR_STORAGE_PORT,
+    PUBLIC_FIRESTORE_FOLDERS_COLLECTION,
+    PUBLIC_FIRESTORE_FILES_COLLECTION
 } = import.meta.env;
 
 const FIREBASE_CONFIG = {
@@ -38,21 +40,19 @@ export default function AppProvider({
 }) {
     const [ loading, setLoading ] = useState(true);
 
-    const [ firestoreMethods, setFirestoreMethods ] = useState({
-        collection: null,
-        doc: null
-    });
-
     const [ config, setConfig ] = useState({
         app: null,
         auth: null,
         db: null,
+        cloud: {
+            folders: null,
+            files: null,
+            format: null,
+        },
         storage: null,
         appCheck: null,
         analytics: null,
     });
-
-    const [ database, setDatabase ] = useState(null);
 
     useEffect( () => {
         
@@ -69,7 +69,7 @@ export default function AppProvider({
                 { initializeApp }, 
                 { initializeAppCheck, ReCaptchaV3Provider },
                 { getAuth, connectAuthEmulator },
-                { getFirestore, collection, doc, connectFirestoreEmulator },
+                { getFirestore, collection, doc ,connectFirestoreEmulator, serverTimestamp },
                 { getStorage, connectStorageEmulator },
                 { getAnalytics }
             ] = await Promise.all([
@@ -101,19 +101,25 @@ export default function AppProvider({
                 ]);
             }
 
-            setFirestoreMethods({
-                collection,
-                doc,
-            })
 
-            setConfig({
+            setConfig(Object.freeze({
                 app,
                 auth,
                 db,
+                cloud: {
+                    folders: collection(db, PUBLIC_FIRESTORE_FOLDERS_COLLECTION),
+                    folder: (folderId) => doc(db, PUBLIC_FIRESTORE_FOLDERS_COLLECTION, folderId),
+                    files: collection(db, PUBLIC_FIRESTORE_FILES_COLLECTION),
+                    file: (fileId) => doc(db, PUBLIC_FIRESTORE_FILES_COLLECTION, fileId),
+                    format: doc => {
+                        return { id: doc.id, ...doc.data() }
+                    },
+                    getCurrentTimestamp: serverTimestamp,
+                },
                 storage,
                 appCheck,
                 analytics,
-            });
+            }));
 
 
             setLoading(false);
@@ -125,37 +131,10 @@ export default function AppProvider({
             mounted = true;
         }
     }, []);
-
-
-    useEffect(() => {
-        let mounted = false;
-        
-        const { db }  = config;
-        
-        if(!db) return;
-
-        const { collection, doc } = firestoreMethods;
-        
-        const obj = {
-            folders: collection(db, "folders"),
-            files: collection(db, "files"),
-            formatDoc: doc => {
-                return { id: doc.id, ...doc.data() }
-            },
-            users: collection(db, "users"),
-            user: (uid) => doc(db, "users", uid),
-        };
-
-        setDatabase(obj);
-
-        return () => {
-            mounted = true;
-        }
-    }, [config, firestoreMethods]);
     
 
     return (
-        <AppContext.Provider value={{...config, database}}>
+        <AppContext.Provider value={{...config}}>
           { loading ? <Spinner /> : children }
         </AppContext.Provider>
     )

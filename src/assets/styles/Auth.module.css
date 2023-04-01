@@ -44,3 +44,36 @@
 .password-eye-button {
     cursor: pointer;
 }
+
+#auth-error::before, #auth-success::before {
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: 400;
+    font-size: 0.8rem;
+    margin-right: 4px;
+}
+
+#auth-error::before {
+    content: '\f071';
+}
+
+#auth-success::before {
+    content: '\f164';
+}
+
+#auth-success {
+    color: var(--bs-success);
+}
+
+#or::before {
+    --font-size: medium;
+    content: attr(data-content);
+    position: absolute;
+    font-size: var(--font-size);
+    background: white;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    right: 50%;
+    width: 50px;
+    border-radius: 50%;
+}

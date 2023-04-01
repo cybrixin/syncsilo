@@ -12,14 +12,19 @@ export function useAuth() {
 }
 
 export default function AuthProvider({ children }) {
-    const [currentUser, setCurrentUser] = useState(null);
+    const [ user, setUser ] = useState(null);
+    const [ verification, setVerification ] = useState(false);
+    const [ verificationEmail, setVerificationEmail ] = useState(false);
+    
     const [loading, setLoading] = useState(true);
     
     const [ config, setConfig ] = useState({
-        userAuth: null,
+        authenticate: null,
         logout: null,
-        resetPwd: null,
-        updatePwd: null,
+        reset: null,
+        update: null,
+        verify: null,
+        sso: null,
     });
 
     const { auth } = useApp();
@@ -30,15 +35,33 @@ export default function AuthProvider({ children }) {
 
         if(!auth) return;
 
-        const authConfig = async () => {
-            const { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updatePassword } = await import("firebase/auth")
+        let obj;
 
-            setConfig({
-                userAuth: (email, password, register = false) => register? createUserWithEmailAndPassword(auth, email, password) : signInWithEmailAndPassword(auth, email, password),
+        const authConfig = async () => {
+            const { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updatePassword, updateProfile, sendEmailVerification, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider, EmailAuthProvider ,signInWithPopup, fetchSignInMethodsForEmail } = await import("firebase/auth")
+            
+            obj = {
+                authenticate: (email, password, register = false) => register? createUserWithEmailAndPassword(auth, email, password) : signInWithEmailAndPassword(auth, email, password),
+                sso: (provider = 'google') => signInWithPopup(auth, provider === 'google' ? new GoogleAuthProvider() : (provider === 'facebook' ? new FacebookAuthProvider() : new GithubAuthProvider())),
+                providers : {
+					[GoogleAuthProvider.PROVIDER_ID]: 'Sign In with Google',
+					[FacebookAuthProvider.PROVIDER_ID]: 'Sign In with Facebook',
+					[GithubAuthProvider.PROVIDER_ID]: 'Sign in with Github',
+					[EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD]: 'Sign in with email and password',
+				},
+                methods: (email) => fetchSignInMethodsForEmail(auth, email),
+                update: (obj, pwd = false, user = null) => pwd ? updatePassword(user ?? auth.currentUser, password) : updateProfile(user ?? auth.currentUser, obj),
                 logout: () => signOut(auth),
-                resetPwd: (email) => sendPasswordResetEmail(auth, email),
-                updatePwd: (password) => currentUser ? updatePassword(currentUser, password) : false,
-            })
+                reset: (email) => sendPasswordResetEmail(auth, email),
+                verify: async (user = null) => { 
+                    await sendEmailVerification(user ?? auth.currentUser);
+                    setVerificationEmail(true);
+                }
+            }
+
+            console.log({...obj})
+
+            setConfig(obj)
             
             mounted = true;
         }
@@ -46,10 +69,13 @@ export default function AuthProvider({ children }) {
         if(!mounted) authConfig();
 
         return onAuthStateChanged(auth, user => {
-            // TODO: Trigger => user !== undefined => Share info in context.
-            console.log(user);
+            setUser(user);
             setLoading(false);
-            setCurrentUser(user);
+            setVerification(false);
+
+            if(user) {
+                setVerification(user.emailVerified);
+            }
         })
 
     }, []);
@@ -57,7 +83,9 @@ export default function AuthProvider({ children }) {
 
 
     const value = Object.freeze({
-        currentUser,
+        user,
+        verification,
+        verificationEmail,
         ...config,
     });
 

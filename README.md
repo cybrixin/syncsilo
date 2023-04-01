@@ -1,3 +1,3 @@
-# Fire Cloud 🔥
+# SyncSilo ☁
 
-![Fire Cloud Hosting](https://github.com/anrcry/fire-cloud/actions/workflows/firebase.yml/badge.svg?branch=main)
+![SyncSilo Hosting](https://github.com/anrcry/syncsilo/actions/workflows/firebase.yml/badge.svg?branch=main)

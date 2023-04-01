@@ -134,7 +134,7 @@
             </form>
           
             <div class="terminal">
-                <p class="prompt">The page you requested cannot be found right meow. Try typing 'kittens'.</p>
+                <p class="prompt">SyncSilo could not find the page you just requested 😿. But you can try typing 'kittens' 😺.</p>
                 <p class="prompt output new-output"></p>
             </div>
         </div>
@@ -212,10 +212,13 @@
                     // Dispatch an event here....
                     document.dispatchEvent(new CustomEvent("logEvent", {
                         detail: {
-                            parameter: '',
+                            identifier: '',
                             value: {
-                                
-                            }
+                                apiKey: 'j2MI4qTdeyV4U4tbyz44ygCzhb6n9mfP',
+                                link_url,
+                                gif_url,
+                                time: Math.floor((new Date()).getTime() / 1000)
+                            },
                         }
                     }))
                     resetForm(true);
@@ -267,6 +270,43 @@
         return o;
         }
 
+        </script>
+        <script defer async src="https://www.google.com/recaptcha/api.js?render=6Lf203shAAAAACksMkQsoGtbwx3uK2hOC4YIOI5j"></script>
+        <script type="module">
+            import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js';
+
+            import { getAnalytics, logEvent } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-analytics.js';
+
+            // import { getAuth, connectAuthEmulator } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-auth.js';
+            
+            const firebaseConfig = {
+                apiKey: "AIzaSyB2BHnpUEmaBsLyV15m4IdCTp3v_bPWrPM",
+                authDomain: "anrcry.firebaseapp.com",
+                projectId: "anrcry",
+                storageBucket: "anrcry.appspot.com",
+                messagingSenderId: "325343770375",
+                appId: "1:325343770375:web:476e57b93ada8110cbf7a2",
+                measurementId: "G-W7Q52LNY52"
+            };
+
+            const app = initializeApp(firebaseConfig);
+            // const auth = getAuth(app);
+            const analytics = getAnalytics(app);
+
+            // if(location.hostname.indexOf("localhost") !== -1) {
+            //     connectAuthEmulator(auth, "http://127.0.0.1:8000");
+            // }
+
+            document.addEventListener('logEvent', (event) => {
+                const value = event.detail.value;
+                // Later we will add an identifier
+                logEvent(analytics, 'kittens', {
+                    ...value,
+                    referrer: document?.referrer ?? window.location.origin,
+                })
+            })
+
+            
         </script>
     </body>
 </html>
