@@ -40,7 +40,7 @@ jobs:
           channelID: beta
           target: syncsilo-cybrix
           expires: 2d
-          projectID: anrcry
+          projectID: cybrixin
 
   live_preview:
     runs-on: ubuntu-latest
@@ -65,4 +65,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           channelID: live
           target: syncsilo-cybrix
-          projectID: anrcry
+          projectID: cybrixin
