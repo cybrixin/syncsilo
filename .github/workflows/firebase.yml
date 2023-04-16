@@ -1,4 +1,4 @@
-name: "syncsilo-cybrix Hosting (CI/CD)"
+name: "SyncSilo Hosting"
 on:
   push:
     paths:
