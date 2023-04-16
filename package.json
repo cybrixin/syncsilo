@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prehost": "vite build",
+    "host": "export GOOGLE_APPLICATION_CREDENTIALS='./.secret/key.json' && firebase --only hosting:syncsilo --project syncsilo-cybrix --debug",
+    "prebetahost": "vite build",
+    "betahost": "export GOOGLE_APPLICATION_CREDENTIALS='./.secret/key.json' && firebase hosting:channel:deploy beta --only syncsilo --expires 2d --project syncsilo-cybrix --json"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.6",

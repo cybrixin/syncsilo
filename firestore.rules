@@ -1,8 +1,30 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write, create, update: if true;
+
+    function signedIn() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    function belongsTo(resource) {
+      return request.auth.uid == resource.data.userId;
+    }
+
+    function whoami(resource) {
+      // If the folder id is null, then this 
+      return resource.data.folderId == null || (exists(/databases/$(database)/documents/folders/$(resource.data.folderId)) && get(/databases/$(database)/documents/folders/$(resource.data.folderId)).data.userId == request.auth.uid)
+    }
+
+    match /files/{fileId}{
+      allow list, read: if signedIn() && belongsTo(resource);
+      allow create: if signedIn() && belongsTo(request.resource) && whoami(request.resource);
+      allow update, delete: if false;
+    }
+
+    match /folders/{folderId} {
+      allow list, read: if signedIn() && belongsTo(resource);
+      allow create: if signedIn() && belongsTo(request.resource);
+      allow update, delete: if false;
     }
   }
 }
