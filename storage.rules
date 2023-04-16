@@ -1,8 +1,19 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write, update, delete: if true;
+    match /{birthday=**} {
+      allow read: if true;
+      allow delete, create, write, update: if false;
+    }
+
+    function resourceForSyncSilo(resource) { 
+      return resource.size <= 5 * 1024 * 1024;
+    }
+
+    match /syncsilo/{userId}/{folderId=**} {
+      allow delete, update: if true;
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId && resourceForSyncSilo(request.resource);
     }
   }
 }
