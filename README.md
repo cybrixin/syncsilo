@@ -1,6 +1,6 @@
 # SyncSilo ☁
 
-![SyncSilo Hosting](https://github.com/anrcry/syncsilo/actions/workflows/firebase.yml/badge.svg?branch=main)
+![SyncSilo Hosting](https://github.com/cybrixin/syncsilo/actions/workflows/firebase.yml/badge.svg?branch=main)
 
 > Sysnsilo goes to public beta from 04/17/2023.
 
