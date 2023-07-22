@@ -61,7 +61,7 @@ export default function AppProvider({
         let mounted = false;
         
         const appConfig = async () => {
-            let { app, storage, appCheck, db, auth, analytics} = config;
+            let { app, storage, appCheck, db, auth, analytics } = config;
 
             if(!loading || (app != null && storage != null && appCheck != null && db != null && auth != null && analytics != null)) return;
             
